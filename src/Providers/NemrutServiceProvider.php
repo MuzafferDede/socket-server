@@ -12,7 +12,7 @@ class NemrutServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        //
+        Route::get('/socket', 'SocketController@handle');
     }
 
     public function register()

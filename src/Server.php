@@ -43,7 +43,7 @@ class Server
                 }
 
                 if ($request != "") {
-                    $request = Request::create('/', 'GET', ["data" => $request]);
+                    $request = Request::create('/socket', 'GET', ["data" => $request]);
                     $response = app()->handle($request);
                     $connection->write($response->content());
                 }
