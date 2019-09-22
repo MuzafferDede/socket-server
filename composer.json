@@ -1,0 +1,45 @@
+{
+    "name": "nemrut/socket-server",
+    "description": "Socket Server using Laravel",
+    "keywords": [
+        "ReactPHP",
+        "Laravel",
+        "Server",
+        "Socket",
+        "TCP/IP"
+    ],
+    "homepage": "http://github.com/nemrutco/socket-server",
+    "type": "library",
+    "require": {
+        "php": ">=5.6.4",
+        "react/event-loop": "^1.1",
+        "react/socket": "^1.3"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Nemrut Creative Studio",
+            "email": "nemrut@nemrut.co"
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "~4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Nemrut\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Nemrut\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Nemrut\\Providers\\NemrutServiceProvider"
+            ]
+        }
+    }
+}
