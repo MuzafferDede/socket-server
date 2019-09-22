@@ -3,6 +3,7 @@
 namespace Nemrut\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Route;
 use Nemrut\Console\Commands\SocketServe;
 
 class NemrutServiceProvider extends ServiceProvider
