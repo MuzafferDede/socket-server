@@ -12,10 +12,7 @@ class SocketServe extends Command
      *
      * @var string
      */
-    protected $signature = 'socket-serve
-        {--host=}
-        {--port=}
-        {--verbose=}';
+    protected $signature = 'socket-serve  {--host=127.0.0.1} {--port=9000}';
 
     /**
      * The console command description.
@@ -41,14 +38,12 @@ class SocketServe extends Command
      */
     public function handle()
     {
-        $host = $this->argument('host');
+        $host = $this->option('host');
 
-        $port = $this->argument('port');
+        $port = $this->option('port');
 
         $this->info("Laravel ReactPHP server started on http://{$host}:{$port}");
 
-        $verbose =  $this->argument('verbose');
-
-        (new Server($host, $port, $verbose))->run();
+        (new Server($host, $port))->run();
     }
 }

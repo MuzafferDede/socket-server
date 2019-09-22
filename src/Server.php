@@ -20,23 +20,10 @@ class Server
      */
     protected $port;
 
-    /**
-     * @var int
-     */
-    protected $verbose;
-
-    /**
-     *
-     *
-     * @param string $host binding host
-     * @param int $port binding port
-     * @param int $verbose log
-     */
-    public function __construct($host = 'localhost', $port = 9000, $verbose = '')
+    public function __construct($host, $port)
     {
         $this->host = $host;
         $this->port = $port;
-        $this->verbose = $verbose;
     }
 
     /**
