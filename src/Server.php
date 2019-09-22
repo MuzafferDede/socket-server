@@ -35,15 +35,17 @@ class Server
         $socket = new ReactServer("$this->host:$this->port", $loop);
 
         $socket->on('connection', function (ConnectionInterface $connection) {
-            $connection->on('data', function ($data) use ($connection) {
-                $data = trim($data);
-                if ($data != "") {
-                    $user = Request::create('/', 'GET', ["user" => $data]);
-                    $user = app()->handle($user);
-                    if ($data == 1) {
-                        $connection->close();
-                    }
-                    $connection->write($user->content() . "\n");
+            $connection->on('data', function ($request) use ($connection) {
+                $request = trim(strtolower($request));
+
+                if ($request == "disconnect") {
+                    $connection->close();
+                }
+
+                if ($request != "") {
+                    $request = Request::create('/', 'GET', ["data" => $request]);
+                    $response = app()->handle($request);
+                    $connection->write($response->content());
                 }
             });
         });
