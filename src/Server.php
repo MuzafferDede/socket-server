@@ -26,6 +26,11 @@ class Server
      */
     protected $path;
 
+    /**
+     * @var array
+     */
+    protected $params;
+
     public function __construct($host, $port, $path)
     {
         $this->host = $host;
@@ -45,21 +50,18 @@ class Server
             $connection->on('data', function ($request) use ($connection) {
                 $request = trim(strtolower($request));
 
-                if ($request == "disconnect") {
+                if (!($this->params = json_decode($request, true))) {
                     $connection->close();
                 }
 
-                if ($request != "") {
-                    $client = new Client([
-                        'base_uri' => 'http://127.0.0.1:8000',
-                        //'http_errors' => false,
-                        //'debug' => true
-                    ]);
-                    $params = json_decode($request, true);
-                    $response = $client->post($this->path, ['form_params' => $params]);
+                $client = new Client([
+                    'base_uri' => 'http://127.0.0.1:8000',
+                    //'http_errors' => false,
+                    //'debug' => true
+                ]);
+                $response = $client->post($this->path, ['form_params' => $this->params]);
 
-                    $connection->write($response->getBody());
-                }
+                $connection->write($response->getBody());
             });
         });
 
