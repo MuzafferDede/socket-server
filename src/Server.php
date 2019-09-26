@@ -5,6 +5,7 @@ namespace Nemrut;
 use React\EventLoop\Factory;
 use React\Socket\ConnectionInterface;
 use Illuminate\Support\Facades\Request;
+use GuzzleHttp\Client;
 use React\Socket\Server as ReactServer;
 
 class Server
@@ -20,10 +21,16 @@ class Server
      */
     protected $port;
 
-    public function __construct($host, $port)
+    /**
+     * @var string
+     */
+    protected $path;
+
+    public function __construct($host, $port, $path)
     {
         $this->host = $host;
         $this->port = $port;
+        $this->path = $path;
     }
 
     /**
@@ -43,9 +50,15 @@ class Server
                 }
 
                 if ($request != "") {
-                    $request = Request::create('/socket', 'GET', ["data" => $request]);
-                    $response = app()->handle($request);
-                    $connection->write($response->content());
+                    $client = new Client([
+                        'base_uri' => 'http://127.0.0.1:8000',
+                        //'http_errors' => false,
+                        //'debug' => true
+                    ]);
+                    $params = json_decode($request, true);
+                    $response = $client->post($this->path, ['form_params' => $params]);
+
+                    $connection->write($response->getBody());
                 }
             });
         });

@@ -1,5 +1,5 @@
 {
-    "name": "nemrut/socket-server",
+    "name": "nemrutco/socket-server",
     "description": "Socket Server using Laravel",
     "keywords": [
         "ReactPHP",
@@ -13,17 +13,16 @@
     "require": {
         "php": ">=5.6.4",
         "react/event-loop": "^1.1",
-        "react/socket": "^1.3"
+        "react/socket": "^1.3",
+        "guzzlehttp/guzzle": "^6.3"
     },
     "license": "MIT",
-    "authors": [
-        {
-            "name": "Nemrut Creative Studio",
-            "email": "nemrut@nemrut.co"
-        }
-    ],
+    "authors": [{
+        "name": "Nemrut Creative Studio",
+        "email": "nemrut@nemrut.co"
+    }],
     "require-dev": {
-        "phpunit/phpunit": "~4.0"
+        "phpunit/phpunit": "^8.0"
     },
     "autoload": {
         "psr-4": {
