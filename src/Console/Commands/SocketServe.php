@@ -12,7 +12,7 @@ class SocketServe extends Command
      *
      * @var string
      */
-    protected $signature = 'socket-serve  {--host=$_SERVER["SERVER_ADDR"]} {--port=9000} {--path=local}';
+    protected $signature = 'socket-serve {--port=9000} {--path=local}';
 
     /**
      * The console command description.
@@ -38,7 +38,7 @@ class SocketServe extends Command
      */
     public function handle()
     {
-        $host = $this->option('host');
+        $host = $_SERVER['SERVER_ADDR'];
 
         $port = $this->option('port');
 
