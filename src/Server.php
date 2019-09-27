@@ -55,7 +55,7 @@ class Server
                 }
 
                 $client = new Client([
-                    'base_uri' => 'http://localhost',
+                    'base_uri' => 'http://127.0.0.1',
                     //'http_errors' => false,
                     //'debug' => true
                 ]);
