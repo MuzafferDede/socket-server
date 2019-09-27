@@ -44,7 +44,7 @@ class SocketServe extends Command
 
         $path = $this->option('path');
 
-        $this->info("Laravel Socket server started on http://{$host}:{$port}. Send POST request to /{$path}");
+        $this->info("Laravel Socket server started on http://{$host}:{$port}. Send POST request to {$path}");
 
         (new Server($host, $port, $path))->run();
     }

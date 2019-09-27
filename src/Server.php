@@ -5,8 +5,6 @@ namespace Nemrut;
 use React\EventLoop\Factory;
 use React\Socket\ConnectionInterface;
 use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Route;
-use GuzzleHttp\Client;
 use React\Socket\Server as ReactServer;
 
 class Server
@@ -48,19 +46,20 @@ class Server
         $socket = new ReactServer("$this->host:$this->port", $loop);
 
         $socket->on('connection', function (ConnectionInterface $connection) {
-            $connection->on('data', function ($request) use ($connection) {
-                $request = trim(strtolower($request));
+            $connection->on('data', function ($data) use ($connection) {
+                $data = trim(strtolower($data));
 
-                if (!($this->params = json_decode($request, true))) {
+                if (!($this->params = json_decode($data, true))) {
                     $connection->close();
                 }
-
-                $myrequest = new \Illuminate\Http\Request;
-                $myrequest = $myrequest::create($this->path, 'POST', $this->params);
-
-                $response =  app()->handle($myrequest);
-                $content = $response->getContent();
-                $connection->write($content);
+                try {
+                    $request = Request::create($this->path, 'POST', $this->params);
+                    $response =  app()->handle($request);
+                    $connection->write($response->getContent());
+                } catch (Exception $e) {
+                    $connection->write('Caught exception: ',  $e->getMessage(), "\n");
+                    $connection->close();
+                }
             });
         });
 
