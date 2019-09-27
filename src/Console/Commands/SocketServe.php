@@ -12,7 +12,7 @@ class SocketServe extends Command
      *
      * @var string
      */
-    protected $signature = 'socket-serve  {--host=127.0.0.1} {--port=9000} {--path=local} ';
+    protected $signature = 'socket-serve  {--host=$_SERVER["SERVER_ADDR"]} {--port=9000} {--path=local}';
 
     /**
      * The console command description.
