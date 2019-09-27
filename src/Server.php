@@ -5,6 +5,7 @@ namespace Nemrut;
 use React\EventLoop\Factory;
 use React\Socket\ConnectionInterface;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Route;
 use GuzzleHttp\Client;
 use React\Socket\Server as ReactServer;
 
@@ -54,14 +55,12 @@ class Server
                     $connection->close();
                 }
 
-                $client = new Client([
-                    'base_uri' => 'http://127.0.0.1:8000',
-                    //'http_errors' => false,
-                    //'debug' => true
-                ]);
-                $response = $client->request('POST', $this->path, ['form_params' => $this->params]);
+                $myrequest = new \Illuminate\Http\Request;
+                $myrequest = $myrequest::create($this->path, 'POST', $this->params);
 
-                $connection->write($response->getBody());
+                $response =  app()->handle($myrequest);
+                $content = $response->getContent();
+                $connection->write($content);
             });
         });
 
