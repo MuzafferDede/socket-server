@@ -59,7 +59,7 @@ class Server
                     //'http_errors' => false,
                     //'debug' => true
                 ]);
-                $response = $client->post($this->path, ['form_params' => $this->params]);
+                $response = $client->request('POST', $this->path, ['form_params' => $this->params]);
 
                 $connection->write($response->getBody());
             });
