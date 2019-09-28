@@ -54,6 +54,8 @@ class Server
                 }
                 try {
                     $request = Request::create($this->path, 'POST', $this->params);
+                    $request->headers->set('Authorization', $this->params['access_token']);
+                    $request->headers->set('Accept',  "application/json");
                     $response =  app()->handle($request);
                     $connection->write($response->getContent());
                 } catch (Exception $e) {
