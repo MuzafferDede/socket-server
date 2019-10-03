@@ -47,10 +47,13 @@ class Server
 
         $socket->on('connection', function (ConnectionInterface $connection) {
             $connection->on('data', function ($data) use ($connection) {
+                $connection->write('You are connected', "\n");
+
                 $data = trim(strtolower($data));
 
                 if (!($this->params = json_decode($data, true))) {
                     $connection->close();
+                    return;
                 }
                 try {
                     $request = Request::create($this->path, 'POST', $this->params);
