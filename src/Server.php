@@ -58,6 +58,7 @@ class Server
                     $request = Request::create($this->path, 'POST', $this->params);
                     $request->headers->set('Accept',  "application/json");
                     $response =  app()->handle($request);
+                    echo $response->getContent();
                     $connection->write($response->getContent() . PHP_EOL);
                 } catch (Exception $e) {
                     $connection->write('Caught exception: ',  $e->getMessage() . PHP_EOL);
