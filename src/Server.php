@@ -46,8 +46,8 @@ class Server
         $socket = new ReactServer("$this->host:$this->port", $loop);
 
         $socket->on('connection', function (ConnectionInterface $connection) {
-            echo $connection->getRemoteAddress() . "connected" . "\n";
-            $connection->write('You are connected', "\n");
+            echo $connection->getRemoteAddress() . "connected" . PHP_EOL;
+            $connection->write('You are connected', PHP_EOL);
             $connection->on('data', function ($data) use ($connection) {
                 $data = trim(strtolower($data));
 
@@ -59,9 +59,9 @@ class Server
                     $request = Request::create($this->path, 'POST', $this->params);
                     $request->headers->set('Accept',  "application/json");
                     $response =  app()->handle($request);
-                    $connection->write($response->getContent());
+                    $connection->write($response->getContent(), PHP_EOL);
                 } catch (Exception $e) {
-                    $connection->write('Caught exception: ',  $e->getMessage(), "\n");
+                    $connection->write('Caught exception: ',  $e->getMessage(), PHP_EOL);
                     $connection->close();
                 }
             });
