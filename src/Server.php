@@ -46,9 +46,9 @@ class Server
         $socket = new ReactServer("$this->host:$this->port", $loop);
 
         $socket->on('connection', function (ConnectionInterface $connection) {
+            echo $connection->getRemoteAddress() . "connected";
+            $connection->write('You are connected', "\n");
             $connection->on('data', function ($data) use ($connection) {
-                $connection->write('You are connected', "\n");
-
                 $data = trim(strtolower($data));
 
                 if (!($this->params = json_decode($data, true))) {
