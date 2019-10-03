@@ -46,8 +46,6 @@ class Server
         $socket = new ReactServer("$this->host:$this->port", $loop);
 
         $socket->on('connection', function (ConnectionInterface $connection) {
-            $connection->write('You are connected' . PHP_EOL);
-            $connection->write('Welcome' . PHP_EOL);
             echo $connection->getRemoteAddress() . "connected" . PHP_EOL;
             $connection->on('data', function ($data) use ($connection) {
                 $data = trim(strtolower($data));
