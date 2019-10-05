@@ -25,11 +25,6 @@ class Server
      */
     protected $path;
 
-    /**
-     * @var array
-     */
-    protected $params;
-
     public function __construct($host, $port, $path)
     {
         $this->host = $host;
@@ -45,26 +40,10 @@ class Server
         $loop = Factory::create();
         $socket = new ReactServer("$this->host:$this->port", $loop);
 
-        $socket->on('connection', function (ConnectionInterface $connection) {
-            echo $connection->getRemoteAddress() . "connected" . PHP_EOL;
-            $connection->on('data', function ($data) use ($connection) {
-                $data = trim(strtolower($data));
+        $pool = new Pool($this->path);
 
-                if (!($this->params = json_decode($data, true))) {
-                    $connection->close();
-                    return;
-                }
-                try {
-                    $request = Request::create($this->path, 'POST', $this->params);
-                    $request->headers->set('Accept',  "application/json");
-                    $response =  app()->handle($request);
-                    echo $response->getContent();
-                    $connection->write($response->getContent() . PHP_EOL);
-                } catch (Exception $e) {
-                    $connection->write('Caught exception: ',  $e->getMessage() . PHP_EOL);
-                    $connection->close();
-                }
-            });
+        $socket->on('connection', function (ConnectionInterface $connection) use ($pool) {
+            $pool->add($connection);
         });
 
         echo "Listening on {$socket->getAddress()}\n";
