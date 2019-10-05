@@ -45,7 +45,7 @@ class Pool
 
             $response =  app()->handle($request);
 
-            $clients = $params['devices'] ?? [$this->getConnectionToken($connection)];
+            $clients = $response['devices'] ?? [$this->getConnectionToken($connection)];
 
             $this->sendDataTo($response->getContent(), $clients);
         }
