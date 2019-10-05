@@ -44,9 +44,11 @@ class Pool
             $request->headers->set('Accept',  "application/json");
 
             $response =  app()->handle($request);
+            $response = $response->getContent();
 
             $clients = $response['devices'] ?? [$this->getConnectionToken($connection)];
 
+            unset($response['devices']);
             $this->sendDataTo($response->getContent(), $clients);
         }
     }
