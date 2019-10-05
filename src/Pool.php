@@ -24,7 +24,7 @@ class Pool
 
         $this->response('Connected', $connection);
 
-        $this->setConnectionToken($connection, '');
+        $this->setConnectionToken($connection, null);
 
         $connection->on('data', function ($data) use ($connection) {
             $this->handleRequest($data, $connection);
@@ -36,30 +36,9 @@ class Pool
         });
     }
 
-    private function initConnection($data, ConnectionInterface $connection)
-    {
-        $params = json_decode($data, true);
-
-        $token = $this->getConnectionToken($connection) || $params['api_token'] ?? $params['api_token'];
-
-        if ($params['action'] == "000") {
-            $connection->close();
-            return false;
-        }
-
-        if (empty($token) || !$params) {
-            $this->response('Something went wrong when reading JSON data', $connection, false);
-            return false;
-        }
-
-        $this->setConnectionToken($connection, $token);
-
-        return $params;
-    }
-
     private function handleRequest($data, ConnectionInterface $connection)
     {
-        if ($params = $this->initConnection($data, $connection)) {
+        if ($params = $this->initRequest($data, $connection)) {
             $request = Request::create($this->path, 'POST', $params);
 
             $request->headers->set('Accept',  "application/json");
@@ -70,6 +49,31 @@ class Pool
 
             $this->sendDataTo($response->getContent(), $clients);
         }
+    }
+
+    private function initRequest($request, ConnectionInterface $connection)
+    {
+        $request = json_decode($request, true);
+        $token = $this->getConnectionToken($connection) ?? $request['api_token'] ?? null;
+
+        if (empty($token)) {
+            $this->response('Device is not logged in', $connection, false);
+            return false;
+        }
+
+        if (!$request) {
+            $this->response('JSON data format is wrong', $connection, false);
+            return false;
+        }
+        if (!$this->getConnectionToken($connection)) {
+            $this->setConnectionToken($connection, $token);
+            $this->response('Login successful', $connection);
+            return  false;
+        }
+
+        $request['api_token'] = $token;
+
+        return $request;
     }
 
     private function sendDataTo($data, $clients)
