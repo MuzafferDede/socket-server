@@ -54,7 +54,7 @@ class Pool
     private function initRequest($request, ConnectionInterface $connection)
     {
         $request = json_decode($request, true);
-        $token = $this->getConnectionToken($connection) ?? $request['api_token'] ?? null;
+        $token = $request['api_token'] ?? $this->getConnectionToken($connection) ?? null;
 
         if (empty($token)) {
             $this->response('Device is not logged in', $connection, false);
@@ -65,10 +65,9 @@ class Pool
             $this->response('JSON data format is wrong', $connection, false);
             return false;
         }
-        if (!$this->getConnectionToken($connection)) {
+
+        if (isset($request['api_token'])) {
             $this->setConnectionToken($connection, $token);
-            $this->response('Login successful', $connection);
-            return  false;
         }
 
         $request['api_token'] = $token;
