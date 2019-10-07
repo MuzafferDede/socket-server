@@ -44,10 +44,9 @@ class Pool
             $request->headers->set('Accept',  "application/json");
 
             $response =  app()->handle($request);
-            $response = $response->getContent();
+            $response = json_decode($response->getContent());
 
-            $clients = isset($response['devices']) ? $response['devices'] : [$this->getConnectionToken($connection)];
-            print_r($response['devices']);
+            $clients = $response->devices ?? [$this->getConnectionToken($connection)];
             $this->sendDataTo($response, $clients);
         }
     }
@@ -81,7 +80,7 @@ class Pool
         foreach ($this->connections as $connection) {
             $token = $this->getConnectionToken($connection);
             if (in_array($token, $clients)) {
-                $connection->write($data . PHP_EOL);
+                $connection->write(json_encode($data, true) . PHP_EOL);
             }
         }
     }
