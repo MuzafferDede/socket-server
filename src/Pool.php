@@ -49,6 +49,7 @@ class Pool
             $clients = $response->data->devices ?? [$this->getConnectionToken($connection)];
             unset($response->data->devices);
             $this->sendDataTo($response, $clients, $connection);
+            $this->response('Request sent', $connection);
         }
     }
 
@@ -76,10 +77,8 @@ class Pool
         return $request;
     }
 
-    private function sendDataTo($data, $clients, $currentConnection)
+    private function sendDataTo($data, $clients)
     {
-        $this->response('Request sent', $currentConnection);
-
         foreach ($this->connections as $connection) {
             $token = $this->getConnectionToken($connection);
             if (in_array($token, $clients)) {
