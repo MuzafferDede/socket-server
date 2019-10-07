@@ -49,7 +49,6 @@ class Pool
             $clients = $response->data->devices ?? [$this->getConnectionToken($connection)];
             unset($response->data->devices);
             $this->sendDataTo($response, $clients, $connection);
-            $this->response('Request sent', $connection);
         }
     }
 
@@ -83,6 +82,8 @@ class Pool
             $token = $this->getConnectionToken($connection);
             if (in_array($token, $clients)) {
                 $connection->write(json_encode($data, true) . PHP_EOL);
+            } else {
+                $this->response('Request sent', $connection);
             }
         }
     }
