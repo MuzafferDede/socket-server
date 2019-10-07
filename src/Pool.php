@@ -76,16 +76,15 @@ class Pool
         return $request;
     }
 
-    private function sendDataTo($data, $clients)
+    private function sendDataTo($data, $clients, $currentConnection)
     {
         foreach ($this->connections as $connection) {
             $token = $this->getConnectionToken($connection);
             if (in_array($token, $clients)) {
                 $connection->write(json_encode($data, true) . PHP_EOL);
-            } else {
-                $this->response('Request sent', $connection);
             }
         }
+        $this->response('Request sent', $currentConnection);
     }
 
     private function response($message, ConnectionInterface $connection, $status = true)
