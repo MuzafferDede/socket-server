@@ -47,7 +47,9 @@ class Pool
             $response = json_decode($response->getContent());
 
             $clients = $response->data->devices ?? [$this->getConnectionToken($connection)];
-            unset($response->data->devices);
+            if (isset($response->data->devices)) {
+                unset($response->data->devices);
+            }
             $this->sendDataTo($response, $clients, $connection);
         }
     }
