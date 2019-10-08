@@ -22,7 +22,7 @@ class Pool
     {
         echo $connection->getRemoteAddress() . " connected" . PHP_EOL;
 
-        $this->response('Connected', $connection);
+        $this->response('Connected to socket server. Now login the device', $connection);
 
         $this->setConnectionToken($connection, null);
 
@@ -80,11 +80,11 @@ class Pool
     {
         foreach ($this->connections as $connection) {
             $token = $this->getConnectionToken($connection);
-            if (in_array($token, $clients)) {
+            $tracker = $data->data->tracker_id ?? null;
+            if (in_array($token, $clients) || $token == $tracker) {
                 $connection->write(json_encode($data, true) . PHP_EOL);
             }
         }
-        $this->response('Request sent', $currentConnection);
     }
 
     private function response($message, ConnectionInterface $connection, $status = true)
