@@ -4,7 +4,6 @@ namespace Nemrut;
 
 use React\EventLoop\Factory;
 use React\Socket\ConnectionInterface;
-use Illuminate\Support\Facades\Request;
 use React\Socket\TcpServer as ReactServer;
 
 class Server
