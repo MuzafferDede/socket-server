@@ -3,12 +3,12 @@
 namespace Nemrut\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Nemrut\Console\Commands\SocketServe;
+use Nemrut\Console\Commands\SocketServer;
 
 class NemrutServiceProvider extends ServiceProvider
 {
 
-    protected $commands = ['SocketServe' => 'command.socket-serve'];
+    protected $commands = ['SocketServer' => 'command.socket-server', 'SocketClient' => 'command.socket-client'];
 
     public function boot()
     {
@@ -17,9 +17,17 @@ class NemrutServiceProvider extends ServiceProvider
 
     public function register()
     {
-        $this->app->singleton('command.socket-serve', function () {
-            return new SocketServe();
+        $this->app->singleton('command.socket-server', function () {
+            return new SocketServer();
         });
-        $this->commands('command.socket-serve');
+
+        $this->app->singleton('command.socket-client', function () {
+            return new SocketClient();
+        });
+
+        $this->commands([
+            'command.socket-server',
+            'command.socket-client'
+        ]);
     }
 }

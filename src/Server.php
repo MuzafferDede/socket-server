@@ -10,36 +10,14 @@ class Server
 {
 
     /**
-     * @var string
-     */
-    protected $host;
-
-    /**
-     * @var int
-     */
-    protected $port;
-
-    /**
-     * @var string
-     */
-    protected $path;
-
-    public function __construct($host, $port, $path)
-    {
-        $this->host = $host;
-        $this->port = $port;
-        $this->path = $path;
-    }
-
-    /**
      * Running HTTP Server
      */
     public function run()
     {
         $loop = Factory::create();
-        $socket = new ReactServer("$this->host:$this->port", $loop);
+        $socket = new ReactServer('0.0.0.0:9000', $loop);
 
-        $pool = new Pool($this->path);
+        $pool = new Pool();
 
         $socket->on('connection', function (ConnectionInterface $connection) use ($pool) {
             $pool->add($connection);

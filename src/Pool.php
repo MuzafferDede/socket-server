@@ -10,12 +10,9 @@ class Pool
 {
     private $connections;
 
-    private $path;
-
-    public function __construct($path)
+    public function __construct()
     {
         $this->connections = new SplObjectStorage();
-        $this->path = $path;
     }
 
     public function add(ConnectionInterface $connection)
@@ -39,18 +36,20 @@ class Pool
     private function handleRequest($data, ConnectionInterface $connection)
     {
         if ($params = $this->initRequest($data, $connection)) {
-            $request = Request::create($this->path, 'POST', $params);
+            $request = Request::create('/api', 'POST', $params);
 
             $request->headers->set('Accept',  "application/json");
 
             $response =  app()->handle($request);
-            $response = json_decode($response->getContent());
+            if (!empty($response)) {
+                $response = json_decode($response->getContent());
 
-            $clients = $response->data->devices ?? [$this->getConnectionToken($connection)];
-            if (isset($response->data->devices)) {
-                unset($response->data->devices);
+                $clients = $response->data->devices ?? [$this->getConnectionToken($connection)];
+                if (isset($response->data->devices)) {
+                    unset($response->data->devices);
+                }
+                $this->sendDataTo($response, $clients);
             }
-            $this->sendDataTo($response, $clients, $connection);
         }
     }
 
@@ -78,7 +77,7 @@ class Pool
         return $request;
     }
 
-    private function sendDataTo($data, $clients, $currentConnection)
+    private function sendDataTo($data, $clients)
     {
         foreach ($this->connections as $connection) {
             $token = $this->getConnectionToken($connection);
