@@ -26,17 +26,19 @@ class Client
         $connector->connect(env('REMOTE_URL') . ':9000')
             ->then(function (ConnectionInterface $connection) {
                 $connection->write(json_encode(['action' => $this->action, 'api_token' => $this->api_token], true) . PHP_EOL);
+                $connection->on('data', function ($params) use ($connection) {
+                    if ($params->action) {
+                        $app = require app()->basePath() . '/bootstrap/app.php';
+                        $kernel = $app->make(Kernel::class);
 
-                $connection->on('data', function ($data) use ($connection) {
-                    if ($data->action) {
-                        $request = Request::create('/api', 'POST', $data);
-
+                        $request = Request::create('/api', 'POST', $params);
                         $request->headers->set('Accept',  "application/json");
 
-                        $response =  app()->handle($request);
+                        $response =  $kernel->handle($request);
                         if (!empty($response)) {
                             $connection->write($response->getContent() . PHP_EOL);
                         }
+                        $kernel->terminate($request, $response);
                     }
                 });
             }, function (Exception $e) {
