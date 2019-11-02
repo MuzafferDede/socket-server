@@ -3,8 +3,9 @@
 namespace Nemrut;
 
 use SplObjectStorage;
+use Illuminate\Http\Request;
 use React\Socket\ConnectionInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Illuminate\Foundation\Http\Kernel;
 
 class Pool
 {
@@ -36,11 +37,13 @@ class Pool
     private function handleRequest($data, ConnectionInterface $connection)
     {
         if ($params = $this->initRequest($data, $connection)) {
+
+            $app = require app()->basePath() . '/bootstrap/app.php';
+            $kernel = $app->make(Kernel::class);
+
             $request = Request::create('/api', 'POST', $params);
+            $response =  $kernel->handle($request);
 
-            $request->headers->set('Accept',  "application/json");
-
-            $response =  app()->handle($request);
             if (!empty($response)) {
                 $response = json_decode($response->getContent());
 
@@ -50,6 +53,8 @@ class Pool
                 }
                 $this->sendDataTo($response, $clients);
             }
+
+            $kernel->terminate($request, $response);
         }
     }
 
