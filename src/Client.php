@@ -31,7 +31,7 @@ class Client
                 });
                 $connection->write(json_encode(['action' => $this->action, 'api_token' => $this->api_token], true) . PHP_EOL);
                 $connection->on('data', function ($params) use ($connection) {
-                    if ($params->action) {
+                    if (optional($params)->action) {
                         $app = require app()->basePath() . '/bootstrap/app.php';
                         $kernel = $app->make(Kernel::class);
 
