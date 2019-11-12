@@ -25,6 +25,10 @@ class Client
         $connector = new Connector($loop);
         $connector->connect(env('REMOTE_URL') . ':9000')
             ->then(function (ConnectionInterface $connection) {
+                cache()->forget('online');
+                cache()->rememberForever('online', function () {
+                    return true;
+                });
                 $connection->write(json_encode(['action' => $this->action, 'api_token' => $this->api_token], true) . PHP_EOL);
                 $connection->on('data', function ($params) use ($connection) {
                     if ($params->action) {
@@ -40,6 +44,12 @@ class Client
                         }
                         $kernel->terminate($request, $response);
                     }
+                });
+                $connection->on('close', function () {
+                    cache()->forget('online');
+                    cache()->rememberForever('online', function () {
+                        return false;
+                    });
                 });
             }, function (Exception $e) {
                 info($e->getMessage());
