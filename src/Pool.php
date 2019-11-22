@@ -18,7 +18,7 @@ class Pool
 
     public function add(ConnectionInterface $connection)
     {
-        echo $connection->getRemoteAddress() . " connected" . PHP_EOL;
+        echo $connection->getRemoteAddress() . " connected. Connected Devices: " . $this->connections->count() . PHP_EOL;
 
         $this->response('Connected to socket server. Now login the device', $connection);
 
@@ -30,7 +30,7 @@ class Pool
 
         $connection->on('close', function () use ($connection) {
             $this->connections->offsetUnset($connection);
-            echo $connection->getRemoteAddress() . " disconnected" . PHP_EOL;
+            echo $connection->getRemoteAddress() . " disconnected. Connected Devices: " . $this->connections->count() . PHP_EOL;
         });
     }
 
