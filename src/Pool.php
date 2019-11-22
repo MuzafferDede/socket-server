@@ -18,8 +18,6 @@ class Pool
 
     public function add(ConnectionInterface $connection)
     {
-        echo $connection->getRemoteAddress() . " connected. Connected Devices: " . $this->connections->count() . PHP_EOL;
-
         $this->response('Connected to socket server. Now login the device', $connection);
 
         $this->setConnectionToken($connection, null);
@@ -106,5 +104,6 @@ class Pool
     private function setConnectionToken(ConnectionInterface $connection, $token)
     {
         $this->connections->offsetSet($connection, $token);
+        echo $connection->getRemoteAddress() . " connected. Connected Devices: " . $this->connections->count() . PHP_EOL;
     }
 }
