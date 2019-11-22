@@ -73,6 +73,7 @@ class Pool
 
         if (isset($request['api_token'])) {
             $this->setConnectionToken($connection, $token);
+            echo $connection->getRemoteAddress() . " connected. Connected Devices: " . $this->connections->count() . PHP_EOL;
         }
 
         $request['api_token'] = $token;
@@ -104,6 +105,5 @@ class Pool
     private function setConnectionToken(ConnectionInterface $connection, $token)
     {
         $this->connections->offsetSet($connection, $token);
-        echo $connection->getRemoteAddress() . " connected. Connected Devices: " . $this->connections->count() . PHP_EOL;
     }
 }
