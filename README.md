@@ -7,7 +7,7 @@ Socket Server using Laravel
 - install via composer
 
 ```sh
-composer require nemrut/socket-serve
+composer require nemrut/socket-server
 ```
 
 - After installing, add provider on config/app.php on your project.
@@ -25,6 +25,6 @@ composer require nemrut/socket-serve
 ## run server
 
 ```sh
-php artisan socket-serve
+php artisan socket-server
 ```
 
