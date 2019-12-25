@@ -27,6 +27,11 @@ class Pool
         });
 
         $connection->on('close', function () use ($connection) {
+            $data = [
+                'action' => '001',
+                'offline' => true
+            ];
+            $this->handleRequest(json_encode($data, true), $connection);
             $this->connections->offsetUnset($connection);
             echo $connection->getRemoteAddress() . " disconnected. Connected Devices: " . $this->connections->count() . PHP_EOL;
         });
