@@ -8,6 +8,12 @@ use React\Socket\TcpServer as ReactServer;
 
 class Server
 {
+    private $port;
+
+    function __construct($port)
+    {
+        $this->$port = $port;
+    }
 
     /**
      * Running HTTP Server
@@ -15,7 +21,7 @@ class Server
     public function run()
     {
         $loop = Factory::create();
-        $socket = new ReactServer('0.0.0.0:9000', $loop);
+        $socket = new ReactServer('0.0.0.0:' . $this->port, $loop);
 
         $pool = new Pool();
 
@@ -23,7 +29,7 @@ class Server
             $pool->add($connection);
         });
 
-        echo "Listening on {$socket->getAddress()}\n";
+        echo date('Y-m-d H:s') . ' ' . "Listening on {$socket->getAddress()}\n";
 
         $loop->run();
     }

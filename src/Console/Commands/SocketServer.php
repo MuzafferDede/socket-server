@@ -12,7 +12,7 @@ class SocketServer extends Command
      *
      * @var string
      */
-    protected $signature = 'socket-server';
+    protected $signature = 'socket-server {--port=9000}';
 
     /**
      * The console command description.
@@ -38,6 +38,6 @@ class SocketServer extends Command
      */
     public function handle()
     {
-        (new Server())->run();
+        (new Server($this->option('port')))->run();
     }
 }
