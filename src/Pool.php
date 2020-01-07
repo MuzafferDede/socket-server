@@ -33,7 +33,7 @@ class Pool
             ];
             $this->handleRequest(json_encode($data, true), $connection);
             $this->connections->offsetUnset($connection);
-            echo $connection->getRemoteAddress() . " disconnected. Connected Devices: " . $this->connections->count() . PHP_EOL;
+            echo date('Y-m-d H:s') . ' ' . $connection->getRemoteAddress() . " disconnected. Connected Devices: " . $this->connections->count() . PHP_EOL;
         });
     }
 
@@ -78,7 +78,7 @@ class Pool
 
         if (isset($request['api_token'])) {
             $this->setConnectionToken($connection, $token);
-            echo $connection->getRemoteAddress() . " connected. Connected Devices: " . $this->connections->count() . PHP_EOL;
+            echo  date('Y-m-d H:s') . ' ' . $connection->getRemoteAddress() . " connected. Connected Devices: " . $this->connections->count() . PHP_EOL;
         }
 
         $request['api_token'] = $token;
