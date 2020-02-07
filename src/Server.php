@@ -12,7 +12,7 @@ class Server
 
     function __construct($port)
     {
-        $this->$port = $port;
+        $this->port = $port;
     }
 
     /**
